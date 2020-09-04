@@ -10,7 +10,7 @@ class ImageScreen extends React.Component {
         return (
             <View style={styles.container}>
                 <Image 
-                    source={{ uri: route.params.photo }}
+                    source={{ uri: route.params.photo_uri }}
                     style={styles.photo}/>
             </View>
         );

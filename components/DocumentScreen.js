@@ -72,13 +72,13 @@ class DocumentScreen extends React.Component {
     createHandled = () => {
         console.log('createHandled')
         //this.showLoading()
-        this.setState({creating: true})
+        this.setState({ creating: true })
     }
     createSendHandled = () => {
-        console.log('createSendHandled ' )
+        console.log('createSendHandled ')
         this.showLoading()
 
-        const url = this.state.api_url + "/docs/"  
+        const url = this.state.api_url + "/docs/"
         const data = {
             name: this.state.name,
             photo: this.state.photo
@@ -87,7 +87,7 @@ class DocumentScreen extends React.Component {
             .then(response => {
                 console.log('create ' + url, response.data);
                 setTimeout(() => {
-                    this.setState({creating: false})
+                    this.setState({ creating: false })
                     this.listHandled()
                 }, 2000)
             })
@@ -147,8 +147,53 @@ class DocumentScreen extends React.Component {
 
     render() {
 
+        const { route } = this.props;
 
+        if(route.params && route.params.photo_encoded){
+            const photo_encoded = route.params.photo_encoded;
+            // const photo_encoded = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
+            /**
+            
+            // curl --location --request POST "https://api.imgbb.com/1/upload?expiration=600&key=6ff38e1b1a9e6360d554afb6a584a884" --form "image=R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+             */
+            const _url = "https://api.imgbb.com/1/upload?expiration=600&key=6ff38e1b1a9e6360d554afb6a584a884";
+
+            this.showLoading();
+            var data = new FormData();
+
+            data.append('image',photo_encoded);
+        
+            var config = {
+                method: 'post',
+                url: _url,
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "multipart/form-data",
+                },
+                onUploadProgress: (progressEvent) => {
+                    const { loaded, total } = progressEvent;
+                    console.log('loaded total ',loaded, total);
+                    // Do something with the progress details
+                  },                
+                data: data,
+            };
+        
+            console.log('image .....');
+            axios(config)
+                .then((response) => { 
+                    console.log( response.data);
+                    const _photo = response.data.data.url;
+                    this.setState({ photo: _photo });
+                    this.hideLoading();
+                    // console.log(JSON.stringify(response.data));
+                })
+                .catch((error) => {
+                    console.log(error);
+                });            
+            
+            route.params.photo_encoded = null;
+        }
 
 
         return (
@@ -166,16 +211,17 @@ class DocumentScreen extends React.Component {
                         <TextInput
                             value={this.state.photo}
                             onChangeText={(photo) => this.setState({ photo })}
-                            placeholder={'photo'} 
-                            style={styles.input} 
-                        />
-
-                        <Button
-                            title={'Send'}
+                            placeholder={'photo'}
                             style={styles.input}
-                            color="green"
-                            onPress={this.createSendHandled}
                         />
+                        <View style={styles.boxWrapper}>
+                            <View style={styles.boxStyle}>
+                                <Button title="Send" onPress={this.createSendHandled}></Button>
+                            </View>
+                            <View style={styles.boxStyle}>
+                                <Button title="Camera" onPress={() => this.props.navigation.navigate('Camera')}></Button>
+                            </View>
+                        </View> 
                     </View>
                 }
 
@@ -274,7 +320,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         // backgroundColor: '#ecf0f1',
-      },
+    },
     input: {
         width: 200,
         height: 44,
@@ -282,7 +328,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         marginBottom: 10,
-      },
+    },
 });
 
 export default DocumentScreen;

@@ -6,14 +6,13 @@ class CameraScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            hasPermission: null,
+            // hasPermission: null,
             cameraRef: null,
             type: Camera.Constants.Type.back,
         };
         this.typeHandleTouch = this.typeHandleTouch.bind(this);
         this.takePhotoHandleTouch = this.takePhotoHandleTouch.bind(this);
         this.cameraHandleRef = this.cameraHandleRef.bind(this);
-
 
     }
 
@@ -29,11 +28,9 @@ class CameraScreen extends React.Component {
     }
 
     async takePhotoHandleTouch() {
-        // if (this.state.cameraRef) {
-        let photo = await this.state.cameraRef.takePictureAsync('photo');
-        // console.log('photo', photo);
-        this.props.navigation.navigate('Image', { 'photo': photo.uri });
-        // }
+        let photo = await this.state.cameraRef.takePictureAsync({skipProcessing: true, base64: true});
+        //console.log('photo', photo);
+        this.props.navigation.navigate('Document', { 'photo_uri': photo.uri, 'photo_encoded':photo.base64 });
     }
 
     cameraHandleRef(ref) {
@@ -123,11 +120,20 @@ const styles = StyleSheet.create({
         width: 40,
         backgroundColor: 'white'
     },
+    text: { 
+        fontSize: 18, 
+        marginBottom: 10, 
+        color: 'white' 
+    },
+    cameraSwitch:{ 
+        color: "#fff",
+        fontSize: 40
+    },
+    cameraIcon:{ 
+        color: "#fff", 
+        fontSize: 40
+    }
 
-
-
-
-    text: { fontSize: 18, marginBottom: 10, color: 'white' }
 });
 
 
