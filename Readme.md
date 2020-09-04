@@ -59,3 +59,11 @@ Install dependencies for camara
 expo install expo-camera
 ```
 
+Generate bundle
+for this you should have an expo account
+
+```bash
+expo build:android
+```
+Then go to expo.io -> login -> and see the status of your build.
+Enjoy!
