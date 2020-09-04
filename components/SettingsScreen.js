@@ -9,7 +9,7 @@ class SettingsScreen extends React.Component {
     <View style={styles.container}>
       
       <TextInput  
-        style={{height: 40,backgroundColor: 'azure', fontSize: 20, marginBottom:30}}  
+        style={{height: 40,backgroundColor: 'azure', fontSize: 20, marginBottom:40}}  
         placeholder= {global.api_url}  
         onChangeText={(text) => global.api_url = text}  
       />        

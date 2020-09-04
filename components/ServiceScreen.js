@@ -9,8 +9,9 @@ class ServiceScreen extends React.Component {
         super(props);
         //console.log(props);
         const { route } = this.props;
+
         this.state = {
-            api_url: 'https://digitalizador.free.beeceptor.com/my/api/algo?cesar',
+            api_url: 'http://' + global.api_url,
             loading: true,
             fromFetch: false,
             fromAxios: false,
@@ -38,7 +39,8 @@ class ServiceScreen extends React.Component {
     }
 
     enviarFoto = () => {
-        console.log("EnviarFoto");
+        console.log(">>EnviarFoto");
+        console.log(this.state.api_url)
         this.showLoading();
         const data = {
             name: 'ImagenID',

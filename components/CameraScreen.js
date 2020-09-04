@@ -31,7 +31,7 @@ class CameraScreen extends React.Component {
     async takePhotoHandleTouch() {
         // if (this.state.cameraRef) {
         let photo = await this.state.cameraRef.takePictureAsync({skipProcessing: true, base64: true});
-        console.log('photo', photo);
+        //console.log('photo', photo);
         this.props.navigation.navigate('Image', { 'photo_uri': photo.uri, 'photo_encoded':photo.base64 });
         // }
     }

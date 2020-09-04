@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native';
 
 //Manejar en estados de componentes
-global.api_url = "http://algo.com";
+global.api_url = "host:port";
 
 class HomeScreen extends React.Component {
 
