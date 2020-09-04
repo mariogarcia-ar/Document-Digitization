@@ -1,13 +1,22 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
 import { Button } from 'react-native';
 
 class SettingsScreen extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
+
+    <View style={styles.container}>
+      
+      <TextInput  
+        style={{height: 40,backgroundColor: 'azure', fontSize: 20, marginBottom:30}}  
+        placeholder= {global.api_url}  
+        onChangeText={(text) => global.api_url = text}  
+      />        
+      
+      
       <Button 
-        title="Go back"  
+        title="Aceptar"  
         onPress={() => this.props.navigation.goBack()} 
       />
     </View>

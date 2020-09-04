@@ -13,7 +13,7 @@ import SettingsScreen from './components/SettingsScreen';
 
 import ImageScreen from './components/ImageScreen';
 import CameraScreen from './components/CameraScreen';
-
+import ServiceScreen from './components/ServiceScreen';
 const Stack = createStackNavigator();
 
 function MyStack() {
@@ -22,9 +22,10 @@ function MyStack() {
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Notifications" component={NotificationsScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
-      <Stack.Screen name="Settings" component={SettingsScreen} />
-      <Stack.Screen name="Image" component={ImageScreen} />
-      <Stack.Screen name="Camera" component={CameraScreen} />
+      <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'Configuracion' }} />
+      <Stack.Screen name="Image" component={ImageScreen} options={{ title: 'Imagen' }}/>
+      <Stack.Screen name="Camera" component={CameraScreen} options={{ title: 'Capturar Imagen' }} />
+      <Stack.Screen name="Service" component={ServiceScreen} options={{ title: 'Digitalizar' }} />
     </Stack.Navigator>
   );
 }
@@ -43,3 +44,4 @@ export default function App() {
     </NavigationContainer>
   );
 }
+

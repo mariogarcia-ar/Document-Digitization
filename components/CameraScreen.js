@@ -2,19 +2,19 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native';
 import { Camera } from 'expo-camera';
+import { FontAwesome, Ionicons,MaterialCommunityIcons } from '@expo/vector-icons';
+
 class CameraScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            hasPermission: null,
+            //hasPermission: null,
             cameraRef: null,
             type: Camera.Constants.Type.back,
         };
         this.typeHandleTouch = this.typeHandleTouch.bind(this);
         this.takePhotoHandleTouch = this.takePhotoHandleTouch.bind(this);
         this.cameraHandleRef = this.cameraHandleRef.bind(this);
-
-
     }
 
     typeHandleTouch() {
@@ -30,9 +30,9 @@ class CameraScreen extends React.Component {
 
     async takePhotoHandleTouch() {
         // if (this.state.cameraRef) {
-        let photo = await this.state.cameraRef.takePictureAsync('photo');
-        // console.log('photo', photo);
-        this.props.navigation.navigate('Image', { 'photo': photo.uri });
+        let photo = await this.state.cameraRef.takePictureAsync({skipProcessing: true, base64: true});
+        console.log('photo', photo);
+        this.props.navigation.navigate('Image', { 'photo_uri': photo.uri, 'photo_encoded':photo.base64 });
         // }
     }
 
@@ -57,24 +57,30 @@ class CameraScreen extends React.Component {
                     style={styles.camara}
                     type={this.state.type}
                     ref={this.cameraHandleRef}
-                    autoFocus='on'>
+                    autoFocus='on'
+                    ratio="16:9">
 
                     <View style={styles.viewType}>
                         <TouchableOpacity
                             style={styles.viewTypeInner}
                             onPress={this.typeHandleTouch}
-                        >
-                            <Text style={styles.text}>Flip</Text>
+                        >                           
+                            <MaterialCommunityIcons
+                             name="camera-switch"
+                             style={styles.cameraSwitch}
+                            />
                         </TouchableOpacity>
 
                         <TouchableOpacity
                             style={styles.viewTakePhoto}
                             onPress={this.takePhotoHandleTouch}
                         >
-                            <View style={styles.viewTakePhotoWrapper}>
-                                <View style={styles.viewTakePhotoInner} >
-                                </View>
-                            </View>
+
+                            <FontAwesome
+                                name="camera"
+                                style={styles.cameraIcon}
+                            />
+                          
                         </TouchableOpacity>
                     </View>
                 </Camera>
@@ -123,11 +129,20 @@ const styles = StyleSheet.create({
         width: 40,
         backgroundColor: 'white'
     },
+    text: { 
+        fontSize: 18, 
+        marginBottom: 10, 
+        color: 'white' 
+    },
+    cameraSwitch:{ 
+        color: "#fff",
+        fontSize: 40
+    },
+    cameraIcon:{ 
+        color: "#fff", 
+        fontSize: 40
+    }
 
-
-
-
-    text: { fontSize: 18, marginBottom: 10, color: 'white' }
 });
 
 

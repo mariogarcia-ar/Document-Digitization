@@ -2,10 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native';
 
- 
+//Manejar en estados de componentes
+global.api_url = "http://algo.com";
 
 class HomeScreen extends React.Component {
 
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -27,7 +29,7 @@ class HomeScreen extends React.Component {
     this.props.navigation.navigate('Camera')
   }
 
-  render() {
+ /* render() {
     return (
       <View style={styles.container}>
         <Button
@@ -44,7 +46,26 @@ class HomeScreen extends React.Component {
         />
       </View>
     );
-  }
+  }*/
+
+
+render() {
+  return (
+    <View style={styles.container}>
+      <Button
+        title="Capturar imagen"
+        onPress={this.camaraHandleClick}
+      />
+      
+      <Button
+          title="Configurar Endpoint"
+          onPress={() => this.props.navigation.navigate('Settings')}
+      />
+
+    </View>
+  );
+}
+
 }
 
 
