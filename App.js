@@ -13,6 +13,7 @@ import SettingsScreen from './components/SettingsScreen';
 
 import ImageScreen from './components/ImageScreen';
 import CameraScreen from './components/CameraScreen';
+import DocumentScreen from './components/DocumentScreen';
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,8 @@ function MyStack() {
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="Image" component={ImageScreen} />
       <Stack.Screen name="Camera" component={CameraScreen} />
+      <Stack.Screen name="Document" component={DocumentScreen} />
+      
     </Stack.Navigator>
   );
 }

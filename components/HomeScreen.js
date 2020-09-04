@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native';
+import { HeaderTitle } from '@react-navigation/stack';
 
- 
+
 
 class HomeScreen extends React.Component {
 
@@ -13,47 +14,58 @@ class HomeScreen extends React.Component {
     };
 
     this.camaraHandleClick = this.camaraHandleClick.bind(this);
+    this.userHandleClick = this.userHandleClick.bind(this);
   }
 
-  camaraHandleClick(){
-    // console.log('camaraHandleClick');
+  userHandleClick() { 
+    this.props.navigation.navigate('Document')
+  }
 
-    // useEffect(() => {
-    //     (async () => {
-    //         const { status } = await Camera.requestPermissionsAsync();
-    //         //this.setHasPermission(status === 'granted');
-    //     })();
-    // }, []);    
+  camaraHandleClick() { 
     this.props.navigation.navigate('Camera')
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Button
-          title="Go to Profile"
-          onPress={() => this.props.navigation.navigate('Profile')}
-        />
-        <Button
-          title="Go to Camera"
-          onPress={this.camaraHandleClick}
-        />
-        <Button
-          title="Go to Image"
-          onPress={() => this.props.navigation.navigate('Image', { 'photo': this.state.photo })}
-        />
+        <HeaderTitle style={styles.headerTitle}>Document Digialization</HeaderTitle>
+        <View style={styles.innerContainer}>
+
+          <Button
+            title="Example :: Document Restful"
+            onPress={this.userHandleClick}
+          />
+          <Button
+            title="Example :: Camera"
+            onPress={this.camaraHandleClick}
+          />
+        </View>
       </View>
     );
   }
 }
 
 
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
+    // // height: 200,
+  },  
+  innerContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    // height: 200,
   },
+ 
+  headerTitle:{
+    margin: 15,
+    color: '#0033ff',
+  }
 });
 
 export default HomeScreen;
