@@ -9,14 +9,16 @@ class DocumentScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            api_url: 'http://192.168.0.75:3000',
+            api_url: 'http://192.168.0.75:8000/api',
             loading: false,
             creating: false,
             dataSource: [],
             docsData: null,
 
             name: null,
-            photo: null,
+            file_name: null,
+            photo_encoded: null,
+            photo_uri: null,
         };
 
         this.listHandled = this.listHandled.bind(this);
@@ -50,7 +52,7 @@ class DocumentScreen extends React.Component {
         console.log('listHandled')
         this.showLoading()
         this.cleanData()
-        const url = this.state.api_url + "/docs";
+        const url = this.state.api_url + "/document";
 
         axios.get(url)
             .then(response => {
@@ -71,27 +73,45 @@ class DocumentScreen extends React.Component {
 
     createHandled = () => {
         console.log('createHandled')
-        //this.showLoading()
         this.setState({ creating: true })
-    }
+    }    
     createSendHandled = () => {
         console.log('createSendHandled ')
         this.showLoading()
 
-        const url = this.state.api_url + "/docs/"
-        const data = {
-            name: this.state.name,
-            photo: this.state.photo
-        }
-        axios.post(url, data)
-            .then(response => {
-                console.log('create ' + url, response.data);
-                setTimeout(() => {
-                    this.setState({ creating: false })
-                    this.listHandled()
-                }, 2000)
+        const _url = this.state.api_url + "/document";
+ 
+        var data = new FormData();
+        data.append('name', this.state.name);
+        // data.append('file', this.state.photo_encoded);
+        data.append('file', { uri: this.state.photo_uri, name: 'image.jpg', type: 'image/jpeg' });
+        
+
+        //console.log(data);
+
+        var config = {
+            method: 'post',
+            url: _url,
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "multipart/form-data",
+            },
+            onUploadProgress: (progressEvent) => {
+                const { loaded, total } = progressEvent;
+                console.log('loaded total ', loaded, total);
+            },
+            data: data,
+        };
+
+        console.log('image .....');
+        axios(config)
+            .then((response) => {
+                console.log(response.data);
+                this.hideLoading();
+                this.setState({ creating: false })
+                this.listHandled()
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log(error);
                 this.hideLoading()
             });
@@ -110,7 +130,7 @@ class DocumentScreen extends React.Component {
         console.log('deleteHandled ' + id)
         this.showLoading()
 
-        const url = this.state.api_url + "/docs/" + id
+        const url = this.state.api_url + "/document/" + id 
         axios.delete(url)
             .then(response => {
                 console.log('delete ' + url, response.data);
@@ -137,7 +157,7 @@ class DocumentScreen extends React.Component {
                 <Text style={styles.lightText}>Id: {data.item.id}</Text>
                 <Text style={styles.lightText}>name: {data.item.name}</Text>
                 <Image
-                    source={{ uri: data.item.photo }}
+                    source={{ uri: data.item.file }}
                     style={styles.photo} />
             </TouchableOpacity>
         )
@@ -149,51 +169,17 @@ class DocumentScreen extends React.Component {
 
         const { route } = this.props;
 
-        if(route.params && route.params.photo_encoded){
+        if (route.params && route.params.photo_encoded) {
             const photo_encoded = route.params.photo_encoded;
-            // const photo_encoded = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-
-            /**
-            
-            // curl --location --request POST "https://api.imgbb.com/1/upload?expiration=600&key=6ff38e1b1a9e6360d554afb6a584a884" --form "image=R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-             */
-            const _url = "https://api.imgbb.com/1/upload?expiration=600&key=6ff38e1b1a9e6360d554afb6a584a884";
-
-            this.showLoading();
-            var data = new FormData();
-
-            data.append('image',photo_encoded);
-        
-            var config = {
-                method: 'post',
-                url: _url,
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "multipart/form-data",
-                },
-                onUploadProgress: (progressEvent) => {
-                    const { loaded, total } = progressEvent;
-                    console.log('loaded total ',loaded, total);
-                    // Do something with the progress details
-                  },                
-                data: data,
-            };
-        
-            console.log('image .....');
-            axios(config)
-                .then((response) => { 
-                    console.log( response.data);
-                    const _photo = response.data.data.url;
-                    this.setState({ photo: _photo });
-                    this.hideLoading();
-                    // console.log(JSON.stringify(response.data));
-                })
-                .catch((error) => {
-                    console.log(error);
-                });            
-            
-            route.params.photo_encoded = null;
+            const photo_uri = route.params.photo_uri;
+            this.setState({ 
+                file_name: 'tmp_file_2', 
+                photo_encoded: photo_encoded,
+                photo_uri: photo_uri,
+            });
+            route.params.photo_encoded = null; 
         }
+ 
 
 
         return (
@@ -209,9 +195,9 @@ class DocumentScreen extends React.Component {
                             style={styles.input}
                         />
                         <TextInput
-                            value={this.state.photo}
-                            onChangeText={(photo) => this.setState({ photo })}
-                            placeholder={'photo'}
+                            value={this.state.file_name}
+                            onChangeText={(file_name) => this.setState({ file_name })}
+                            placeholder={'file_name'}
                             style={styles.input}
                         />
                         <View style={styles.boxWrapper}>
@@ -221,7 +207,7 @@ class DocumentScreen extends React.Component {
                             <View style={styles.boxStyle}>
                                 <Button title="Camera" onPress={() => this.props.navigation.navigate('Camera')}></Button>
                             </View>
-                        </View> 
+                        </View>
                     </View>
                 }
 
